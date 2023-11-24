@@ -1,0 +1,118 @@
+version: '3'
+services:
+  openldap:
+    image: osixia/openldap:1.2.4
+    container_name: openldap
+    hostname: openldap
+    ports:
+      - "389:389"
+      - "636:636"
+    networks:
+      - my-network
+
+  onem2m_server:
+    # build: ./onem2m_server
+    image: abhishek28069/unisense:onem2m_server
+    container_name: onem2m_server
+    hostname: onem2m_server
+    ports:
+      - "5089:5089"
+    networks:
+      - my-network
+      
+  sensor_manager:
+    # build: ./sensor_manager
+    image: abhishek28069/unisense:sensor_manager
+    container_name: sensor_manager
+    hostname: sensor_manager
+    ports:
+      - "8069:8069"
+      - "5091:5091"
+      - "2000:2000"
+    cap_add:
+      - SYS_ADMIN
+      - CAP_SYS_ADMIN
+    networks:
+      - my-network
+
+  platform_backend:
+    # build: ./platform-backend
+    image: abhishek28069/unisense:platform-backend
+    container_name: platform_backend
+    hostname: platform_backend
+    ports:
+      - "3001:3001"
+    networks:
+      - my-network
+    depends_on:
+      - openldap
+
+  platform_ui:
+    # build: ./platform_ui
+    image: abhishek28069/unisense:platform_ui
+    container_name: platform_ui
+    hostname: platform_ui
+    ports:
+      - "5173:5173"
+    networks:
+      - my-network
+
+  sensormanager_frontend:
+    # build: ./sensormanager_frontend
+    image: abhishek28069/unisense:sensormanager_frontend
+    container_name: sensormanager_frontend
+    hostname: sensormanager_frontend
+    ports:
+      - "5174:5174"
+    networks:
+      - my-network
+
+  scheduler:
+    image: abhishek28069/unisense:scheduler
+    container_name: scheduler
+    hostname: scheduler
+    networks:
+      - my-network
+
+  deployer:
+    image: abhishek28069/unisense:deployer
+    container_name: deployer
+    hostname: deployer
+    ports:
+      - "8081:8081"
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - my-network
+
+  deployer_master:
+    image: abhishek28069/unisense:deployer_master
+    container_name: deployer_master
+    hostname: deployer_master
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+
+  monitoring:
+    image: abhishek28069/unisense:monitoring
+    container_name: monitoring
+    hostname: monitoring
+    networks:
+      - my-network
+
+  proxy_server:
+    image: abhishek28069/unisense:proxy_server
+    container_name: proxy_server
+    hostname: proxy_server
+    ports:
+      - 3000:3000
+    networks:
+      - my-network
+
+
+networks:
+  my-network:
+
+
+

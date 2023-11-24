@@ -1,0 +1,10 @@
+{
+  "app_name": "aq_solar_check",
+  "app_description": "A cool app which knows when to turn your appliances on/off",
+  "cmd": ["npm install", "npm run dev"],
+  "sensors": {
+    "AQI": 2,
+    "SL": 2,
+    "EM": 1
+  }
+}
